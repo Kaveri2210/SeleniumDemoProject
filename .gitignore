@@ -1,0 +1,27 @@
+# Maven build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE files
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+.vscode/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test Reports
+surefire-reports/
+test-output/
+
+# Environment configs
+.env
