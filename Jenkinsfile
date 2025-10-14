@@ -2,19 +2,18 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3.9.9'    // Make sure Maven3 is configured in Jenkins (Manage Jenkins → Global Tool Configuration)
-        jdk 'JDK17'       // Or whichever JDK you installed
+        jdk 'JDK17'          // Name of your JDK in Jenkins Global Tool Config
+        maven 'Maven3.9.9'   // Name of your Maven install in Jenkins
     }
 
     environment {
-        BROWSER = "chrome"   // Default browser for test
+        BROWSER = 'chrome' // Default browser
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                echo 'Fetching latest code...'
+                echo 'Checking out code from GitHub...'
                 git branch: 'main', url: 'https://github.com/Kaveri2210/SeleniumDemoProject.git'
             }
         }
@@ -26,31 +25,47 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Test - Chrome') {
             steps {
-                echo "Running Selenium tests on ${BROWSER}..."
-                sh 'mvn test -DsuiteXmlFile=testng.xml'
+                echo 'Running tests on Chrome...'
+                script {
+                    env.BROWSER = 'chrome'
+                    sh "mvn test -Dbrowser=${env.BROWSER}"
+                }
             }
         }
 
-        stage('Archive Results') {
+        stage('Test - Firefox') {
             steps {
-                echo 'Archiving reports...'
-                archiveArtifacts artifacts: 'target/surefire-reports/**/*.*', allowEmptyArchive: true
-                junit 'target/surefire-reports/*.xml'
+                echo 'Running tests on Firefox...'
+                script {
+                    env.BROWSER = 'firefox'
+                    sh "mvn test -Dbrowser=${env.BROWSER}"
+                }
+            }
+        }
+
+        stage('Test - Edge') {
+            steps {
+                echo 'Running tests on Edge...'
+                script {
+                    env.BROWSER = 'edge'
+                    sh "mvn test -Dbrowser=${env.BROWSER}"
+                }
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline completed.'
+            echo 'Cleaning up workspace...'
+            cleanWs()
         }
         success {
-            echo '✅ Tests Passed Successfully!'
+            echo 'Pipeline finished successfully!'
         }
         failure {
-            echo '❌ Tests Failed. Check Reports!'
+            echo 'Pipeline failed. Check the console output.'
         }
     }
 }
