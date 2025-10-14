@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK17'          // Name of your JDK in Jenkins Global Tool Config
-        maven 'Maven3.9.9'   // Name of your Maven install in Jenkins
+        jdk 'JDK17'
+        maven 'Maven3.9.9'
     }
 
     environment {
-        BROWSER = 'chrome' // Default browser
+        BROWSER = 'chrome'
     }
 
     stages {
@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building project with Maven...'
-                sh 'mvn clean compile'
+                bat 'mvn clean compile'
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
                 echo 'Running tests on Chrome...'
                 script {
                     env.BROWSER = 'chrome'
-                    sh "mvn test -Dbrowser=${env.BROWSER}"
+                    bat "mvn test -Dbrowser=%BROWSER%"
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
                 echo 'Running tests on Firefox...'
                 script {
                     env.BROWSER = 'firefox'
-                    sh "mvn test -Dbrowser=${env.BROWSER}"
+                    bat "mvn test -Dbrowser=%BROWSER%"
                 }
             }
         }
@@ -50,7 +50,7 @@ pipeline {
                 echo 'Running tests on Edge...'
                 script {
                     env.BROWSER = 'edge'
-                    sh "mvn test -Dbrowser=${env.BROWSER}"
+                    bat "mvn test -Dbrowser=%BROWSER%"
                 }
             }
         }
@@ -65,6 +65,11 @@ pipeline {
             echo 'Pipeline finished successfully!'
         }
         failure {
+            echo 'Pipeline failed. Check the console output.'
+        }
+    }
+}
+
             echo 'Pipeline failed. Check the console output.'
         }
     }
