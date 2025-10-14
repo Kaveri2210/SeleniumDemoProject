@@ -45,6 +45,8 @@ pipeline {
             }
         }
 
+        
+
         stage('Test - Edge') {
             steps {
                 echo 'Running tests on Edge...'
@@ -54,18 +56,27 @@ pipeline {
                 }
             }
         }
+        stage('Allure Report') {
+            steps {
+                allure results: [[path: 'target/allure-results']]
+            }
+        }
     }
 
-    post {
-        always {
-            echo 'Cleaning up workspace...'
-            cleanWs()
-        }
+   post {
         success {
-            echo 'Pipeline finished successfully!'
+            emailext(
+                subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Good news! The build passed.\nCheck Allure Report: ${env.BUILD_URL}allure",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
         }
         failure {
-            echo 'Pipeline failed. Check the console output.'
+            emailext(
+                subject: "Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Oops! The build failed.\nCheck Allure Report: ${env.BUILD_URL}allure",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
         }
     }
 }
