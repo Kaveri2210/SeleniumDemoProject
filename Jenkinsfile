@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Fetching latest code...'
-                git branch: 'main', url: 'https://github.com/<your-username>/SeleniumDemoProject.git'
+                git branch: 'main', url: 'https://github.com/Kaveri2210/SeleniumDemoProject.git'
             }
         }
 
