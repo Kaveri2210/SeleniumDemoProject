@@ -63,19 +63,4 @@ pipeline {
         }
     }
 
-  post {
-    success {
-        emailext(
-            subject: "Build SUCCESS: ${currentBuild.fullDisplayName}",
-            body: "Check Allure report at ${BUILD_URL}allure",
-            to: "recipient@example.com"
-        )
-    }
-    failure {
-        emailext(
-            subject: "Build FAILURE: ${currentBuild.fullDisplayName}",
-            body: "Check Allure report at ${BUILD_URL}allure",
-            to: "recipient@example.com"
-        )
-    }
 }
