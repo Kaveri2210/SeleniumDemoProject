@@ -56,11 +56,7 @@ pipeline {
                 }
             }
         }
-        stage('Allure Report') {
-            steps {
-                allure results: [[path: 'target/allure-results']]
-            }
-        }
+        
     }
 
 }
